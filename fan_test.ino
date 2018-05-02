@@ -174,13 +174,6 @@ void calc_displacement() {
 	lcd.clear();
 	int x = (int) x_disp;
 	int y = (int) y_disp;
-//	lcd.print("x:");
-//	lcd.print(x);
-//	lcd.setCursor(6, 0);
-//	lcd.print("y:");
-//	lcd.print(y);
-//	lcd.setCursor(0,1);
-//	lcd.print((int)set_point);
 	lcd.setCursor(0,0);
 	lcd.print("x:");
 	lcd.print(x);
@@ -222,12 +215,6 @@ void pan_fan() {
 		//change back to init_rotate_to_fire
 		cur_state = init_rotate_to_fire;
 	}
-//	else if(rotate&&(ambient_val-flame_val > FLAME_TOL*1.5)&&found_flame) {//this occurs after the flame has been found firs time
-//		analogWrite(Z_ROT, 0);
-//		rotate=false;
-//		//change back to see_fire
-//		cur_state=see_fire;
-//	}
 }
 
 void run_fan() {
@@ -252,12 +239,6 @@ void extinguish_flame() {
 			lcd.setCursor(0, 0);
 			lcd.clear();
 			lcd.print(flame_val);
-			//Serial.println(analogRead(FLAME));
-//			if (ambient_val-flame_val > FLAME_TOL) {
-//				lcd.setCursor(0, 1);
-//				lcd.print("extinguishing");
-//				done = true;
-//			}
 			if (yServo.read() > 100) { //check that limit if its too low
 				done = true;
 			}
@@ -289,56 +270,17 @@ void extinguish_flame() {
 }
 
 void loop() {
-
-	// Wait for some input
-//	sensors_event_t event;
-//	bno.getEvent(&event);
-//	/* Display the floating point data */
-//	Serial.print("X: ");
-//	Serial.print(event.orientation.x, 4);
-//	Serial.print(" Y: ");
-//	Serial.print(event.orientation.y, 4);
-//	Serial.print(" Z: ");
-//	Serial.print(event.orientation.z, 4);
-//	Serial.print(" ");
-//	delay(50);
-	Serial.print("sonar f: ");
-	Serial.print(sonar_f.ping_in());
-	Serial.println("in ");
-	delay(20);
-	Serial.print("sonar r: ");
-	Serial.println(sonar_r.ping_in()); //ensure that the ping times are ample for these
-	delay(20);
-//	Serial.print("in ");
-//	Serial.print("flame: ");
-//	Serial.print(analogRead(FLAME));
-//	Serial.print(" f-rot: ");
-//	Serial.println((Z_ROT_POT));
-//	Serial.print(" abs rotation ");
-//	Serial.println(get_relative_heading());
-//	Serial.print(" turret_angle: ");
-//	Serial.println(get_abs_turret_angle());
-	Serial.print(" right line: ");
-	Serial.print(analogRead(RIGHT_LINE));
-	Serial.print(" front line: ");
-	Serial.print(analogRead(FRONT_LINE));
-	Serial.println(cur_state);
-//	Serial.println("");
-//	lcd.clear();
-//	lcd.setCursor(0,0);
-
-//	lMotor->drive(.3);
-//	esc.write(40);
-//	rMotor->drive(.3);
+	//runs pan_fan as a subproccess
 	pan_fan(); //MAKE SURE THIS IS
 	//UNCOMMENTED
 	switch (cur_state) {
-//	case start:{
-//		if(!digitalRead(BUTTON)){
-//			cur_state=straight;
-//		}
-//		break;
-//	}
+		//tells the robot to wait until the button is pressed
+	case start:{
+		if(!digitalRead(BUTTON)){
+			cur_state=straight;
+		}
+		break;
+	}
 	case straight: {
 		//TODO check for cliffs
 		//TODO track the distance
@@ -356,18 +298,6 @@ void loop() {
 		delay(10);
 		int frontL = analogRead(FRONT_LINE);
 		int rightL = analogRead(RIGHT_LINE);
-//		if ( frontL > FRONT_LINE_TOL )
-//		{
-//			lMotor->drive(-TURN_SPEED);
-//			rMotor->drive(-TURN_SPEED);
-//			delay(500);
-//			cur_state = go_left;
-//		}
-//		if ( rightL > RIGHT_LINE_TOL )
-//		{
-//			lMotor->drive(TURN_SPEED);
-//			rMotor->drive(RIGHT_CORRECT + 0.1);
-//		}
 		if (front_dist < 9 ) {
 			cur_state = go_left;
 		}
@@ -388,6 +318,7 @@ void loop() {
 		}
 		break;
 	}
+	//these serve as inits for the left and right turns 
 	case go_left: {
 		//this must occur before the setpoint is changed
 		//calc_displacement();
@@ -525,29 +456,7 @@ void loop() {
 		break;
 	}
 	case await: {
-//		drive_straight();
-//		char heading[4];
-//		char setpoint[4];
-//		int rel_heading = (int)get_relative_heading();
-//		lcd.clear();
-//		lcd.setCursor(0,0);
-//		sprintf(heading, "%d", rel_heading);
-//		lcd.print(heading);
-//		int int_set_point=(int) set_point;
-//		lcd.setCursor(0,1);
-//		sprintf(setpoint, " s:%d",int_set_point);
-//		lcd.print(setpoint);
-//		esc.write(100);
-//		lcd.clear();
 
-//		int flame_val = analogRead(FLAME);
-//		lcd.print(flame_val);
-//		int sonar = sonar_f.ping_in();
-//		lcd.setCursor(0, 1);
-//		lcd.print(sonar);
-//		delay(100);
-//		lMotor->drive(0);
-//		rMotor->drive(0);
 
 
 		lcd.clear();
@@ -567,23 +476,7 @@ void loop() {
 		break;
 	}
 	case init_test_2: {
-//		if (turn_right()) {
-//			des_angle = get_relative_heading() + get_abs_turret_angle();
-//			if (des_angle < 0) {
-//				des_angle += 360;
-//			}
-//			if (des_angle >= 360) {
-//				des_angle -= 360;
-//			}
-//			cur_state = test;
-//		}
-//		if(turn_to_angle(300)){
-//			set_point=300;
-//			cur_state=test;
-//		}
-		//if(turret_to_zero()){
-			cur_state=test;
-		//}
+
 		break;
 	}
 	case test: {
@@ -591,8 +484,6 @@ void loop() {
 		rMotor->drive(0);
 		check_line();
 		Serial.println();
-//		Serial.println(get_abs_turret_angle());
-//		Serial.println(analogRead(FLAME));
 		delay(500);
 		break;
 	}
@@ -666,6 +557,7 @@ void check_line() {
 		disable_right_time=millis()+1000;
 	}
 }
+//returns true when the turret has returned to its starting point 
 bool turret_to_zero(){
 	float turret_angle=get_abs_turret_angle();
 	if(abs(turret_angle)<1){
@@ -712,14 +604,7 @@ void drive_straight() {
 	Serial.print(relative_heading);
 	Serial.print(" error: ");
 	Serial.println(abs(relative_heading - set_point), 4);
-//	int frontLine = analogRead(FRONT_LINE);
-//	int rightLine = analogRead(RIGHT_LINE);
-//	if ( frontLine > FRONT_LINE_TOL || rightLine > RIGHT_LINE_TOL)
-//	{
-//		lMotor->drive(TURN_SPEED);
-//		rMotor->drive(TURN_SPEED + CORRECTION_SPEED + 0.1);
-//		Serial.println("rotating left");
-//	}
+	//if the setpoint is zero then use 359 as an error of 1
 	if (set_point == 0) {
 		if (relative_heading <= 180 && relative_heading != 0) {
 			lMotor->drive(TURN_SPEED);
@@ -733,6 +618,7 @@ void drive_straight() {
 			lMotor->drive(TURN_SPEED);
 			rMotor->drive(TURN_SPEED);
 		}
+	//otherwise use normal behavior
 	} else {
 		if (relative_heading < set_point) {
 			lMotor->drive(TURN_SPEED + CORRECTION_SPEED);
@@ -748,7 +634,7 @@ void drive_straight() {
 		}
 	}
 
-}
+}//gets the rotation of the turret relative to the pot used to find its position
 float get_abs_turret_angle(){
 	const float tick_to_angle =.3; //this is half the range/ticks
 	int turret_pos=analogRead(Z_ROT_POT);
@@ -773,7 +659,7 @@ void decrease_setpoint() {
 	}
 	set_point -= 90;
 }
-
+//gets the heading of the robot bound from 0 to 360
 float get_relative_heading() {
 	sensors_event_t event;
 	bno.getEvent(&event);
@@ -783,7 +669,7 @@ float get_relative_heading() {
 	}
 	return abs_heading - offset + 360.0;
 }
-
+//these functions return true upon completion
 bool turn_left() {
 
 	float relative_heading = get_relative_heading();
@@ -813,13 +699,6 @@ bool turn_right() {
 	Serial.print(relative_heading);
 	Serial.print(" error: ");
 	Serial.println(abs(relative_heading - set_point), 4);
-//	int lineFront = analogRead(FRONT_LINE);
-//	int lineRight = analogRead(RIGHT_LINE);
-//	if (lineRight > RIGHT_LINE_TOL || lineFront > FRONT_LINE_TOL)
-//	{
-//		decrease_setpoint();
-//		return true;
-//	}
 	if (abs(relative_heading-set_point) < allowable_error
 			|| abs(relative_heading-set_point) > (360 - allowable_error)) {
 		lMotor->drive(0);
